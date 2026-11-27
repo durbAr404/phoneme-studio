@@ -1,0 +1,70 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+
+concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/api } }
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: postgres, POSTGRES_DB: phonemestudio_test }
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13", cache: pip }
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: ruff check app tests && ruff format --check app tests
+      - run: pytest --cov=app --cov-report=term-missing
+      - name: Migrations apply cleanly
+        env: { DATABASE_URL: "postgresql+psycopg://postgres:postgres@localhost:5432/phonemestudio_test" }
+        run: |
+          psql postgresql://postgres:postgres@localhost:5432/phonemestudio_test -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+          alembic upgrade head && python -m app.seed
+
+  web:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: apps/web/package-lock.json }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  e2e:
+    needs: [api, web]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: postgres, POSTGRES_DB: phonemestudio }
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/phonemestudio
+      DEV_LOGIN_ENABLED: "true"
+      ADMIN_EMAILS: admin@example.com
+      API_URL: http://localhost:8000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13", cache: pip }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: apps/web/package-lock.json }
+      - run: pip install -r apps/api/requirements.txt
+      - run: cd apps/api && alembic upgrade head && python -m app.seed
+      - run: cd apps/web && npm ci && npx playwright install --with-deps chromium && npm run build
+      - run: cd apps/web && npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: playwright-report, path: apps/web/playwright-report }

@@ -1,0 +1,184 @@
+@import "tailwindcss";
+/* Tailwind skips folders listed in .gitignore when it looks for class names, and the optional
+   showcase folder is ignored until it's published, so add it explicitly. */
+@source "./(showcase)";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Fredoka", system-ui, sans-serif;
+  --font-ipa: "Andika", "Segoe UI", "Arial Unicode MS", sans-serif;
+
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-on-primary: var(--on-primary);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-danger: var(--danger);
+
+  --color-mint: var(--mint);
+  --color-mint-ink: var(--mint-ink);
+  --color-sky: var(--sky);
+  --color-sky-ink: var(--sky-ink);
+  --color-peach: var(--peach);
+  --color-peach-ink: var(--peach-ink);
+  --color-butter: var(--butter);
+  --color-butter-ink: var(--butter-ink);
+  --color-lilac: var(--lilac);
+  --color-lilac-ink: var(--lilac-ink);
+
+  --color-correct: var(--correct);
+  --color-present: var(--present);
+  --color-absent: var(--absent);
+
+  --radius-card: 28px;
+  --shadow-soft: 0 6px 0 var(--shadow-ring);
+
+  --animate-flip: flip 0.5s ease both;
+  --animate-pop: pop 0.18s ease;
+  --animate-rise: rise 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  --animate-shake: shake 0.42s ease;
+  --animate-hop: hop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+  --animate-drop: drop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+/* Mint garden (light) */
+:root {
+  --paper: #f4fbf7;
+  --surface: #ffffff;
+  --sunken: #e9f3ee;
+  --ink: #17352e;
+  --ink-soft: #4d6a62;
+  --ink-faint: #56706a;
+  --line: #dcebe4;
+  --line-strong: #c3d8cf;
+  --primary: #1f7a5c;
+  --primary-strong: #17614a;
+  --on-primary: #ffffff;
+  --accent: #ff8a7a;
+  --accent-ink: #a8402f;
+  --danger: #b3364f;
+  --mint: #d9f2e7;
+  --mint-ink: #17463a;
+  --sky: #dbeaff;
+  --sky-ink: #1e3a5f;
+  --peach: #ffe3d9;
+  --peach-ink: #6b3a1f;
+  --butter: #fff3c4;
+  --butter-ink: #5b4a00;
+  --lilac: #ece6ff;
+  --lilac-ink: #3d2f7a;
+  --correct: #2e8b6a;
+  --present: #f4b740;
+  --absent: #cfdcd6;
+  --shadow-ring: #e2efe9;
+  --wave-1: #1f7a5c;
+  --wave-2: #ff8a7a;
+  color-scheme: light;
+}
+
+/* Mint blend (dark): soft charcoal with a hint of green, off-white text, calm accents */
+.dark {
+  --paper: #121716;
+  --surface: #1a201f;
+  --sunken: #222a28;
+  --ink: #e5efec;
+  --ink-soft: #a0b5af;
+  --ink-faint: #93a8a2;
+  --line: #2a3431;
+  --line-strong: #384541;
+  --primary: #72cfa9;
+  --primary-strong: #8edcbb;
+  --on-primary: #0f2019;
+  --accent: #eca577;
+  --accent-ink: #f0b38f;
+  --danger: #ff8fa3;
+  --mint: #21302b;
+  --mint-ink: #cdeee0;
+  --sky: #1f2a3a;
+  --sky-ink: #cfe0f7;
+  --peach: #342a22;
+  --peach-ink: #f6d9c4;
+  --butter: #2f2d24;
+  --butter-ink: #f1e6b5;
+  --lilac: #29263a;
+  --lilac-ink: #ddd5fa;
+  --correct: #3a9a78;
+  --present: #d9a43e;
+  --absent: #333c39;
+  --shadow-ring: #0c100f;
+  --wave-1: #72cfa9;
+  --wave-2: #eca577;
+  color-scheme: dark;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  scroll-padding-top: 96px;
+}
+html[data-text="large"] { font-size: 112.5%; }
+html[data-text="xl"] { font-size: 125%; }
+html[data-font="easy"] body { font-family: "Andika", system-ui, sans-serif; letter-spacing: 0.02em; word-spacing: 0.08em; }
+body { font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.6; min-height: 100vh; }
+
+.ipa { font-family: var(--font-ipa); font-weight: 700; }
+
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; border-radius: 10px; }
+
+/* Keycaps coloured by sound class through --tint / --key-ink set inline */
+.keycap {
+  background: var(--tint, var(--sunken));
+  color: var(--key-ink, var(--ink));
+  border-radius: 14px;
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--key-ink, var(--ink)) 18%, transparent);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.3s ease;
+}
+.dark .keycap { background: var(--tint-dark, var(--sunken)); color: var(--key-ink-dark, var(--ink)); }
+.keycap:active:not(:disabled) { transform: translateY(3px); box-shadow: none; }
+.keycap:disabled { opacity: 0.45; }
+
+@keyframes flip {
+  0% { transform: rotateX(0); }
+  49% { transform: rotateX(90deg); }
+  51% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0); }
+}
+@keyframes pop { 0% { transform: scale(0.85); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(10px); } 60% { transform: translateX(-7px); } 80% { transform: translateX(7px); } }
+@keyframes hop { 50% { transform: translateY(-18px) scale(1.04, 0.96); } }
+@keyframes drop { from { opacity: 0; transform: translateY(-36px) rotate(-10deg); } to { opacity: 1; transform: none; } }
+@keyframes pulse-bar { 0%, 100% { transform: scaleY(0.45); } 50% { transform: scaleY(1); } }
+@keyframes surge { 0% { transform: scaleY(0.2); } 50% { transform: scaleY(1.3); } 100% { transform: scaleY(0.6); } }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(0); } 97% { transform: scaleY(1); } }
+@keyframes toast-in { 0% { transform: translate(-50%, -150%); } 15%, 85% { transform: translate(-50%, 0); } 100% { transform: translate(-50%, -150%); } }
+@keyframes jelly { 0% { transform: scale(1, 1); } 30% { transform: scale(1.18, 0.82); } 55% { transform: scale(0.9, 1.1); } 80% { transform: scale(1.04, 0.96); } 100% { transform: scale(1, 1); } }
+
+.wave-bar { transform-origin: center; animation: pulse-bar 1.6s ease-in-out infinite; transition: background-color 1s ease; }
+.wave-surge .wave-bar { animation: surge 0.7s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.btn-jelly:active { animation: jelly 0.45s ease; }
+
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation: none !important; transition: none !important; }
+html[data-motion="less"] .wave-bar, html[data-motion="less"] .confetti { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+@media print {
+  header, footer, .no-print { display: none !important; }
+  body { background: #fff; }
+}
+
+/* Colour-blind friendly feedback: adds a shape on top of the colour */
+.cb-mark { display: none; }
+html[data-colorblind="on"] .cb-mark { display: block; }

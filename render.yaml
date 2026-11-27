@@ -1,0 +1,17 @@
+# Render blueprint for the API (free web service). The database is Neon Postgres (free tier).
+services:
+  - type: web
+    name: phonemestudio-api
+    runtime: docker
+    rootDir: apps/api
+    plan: free
+    healthCheckPath: /ready
+    envVars:
+      - { key: ENV, value: production }
+      - { key: DATABASE_URL, sync: false }        # Neon connection string, postgresql+psycopg://...
+      - { key: ALLOWED_ORIGINS, sync: false }     # https://your-site.vercel.app
+      - { key: COOKIE_SECURE, value: "true" }
+      - { key: IP_HASH_SALT, generateValue: true }
+      - { key: CRON_SECRET, sync: false }         # same value as CRON_SECRET on Vercel
+      - { key: SENTRY_DSN, sync: false }          # optional
+      - { key: REDIS_URL, sync: false }           # optional, Upstash Redis

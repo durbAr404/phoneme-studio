@@ -1,0 +1,38 @@
+# Dependencies and build output
+node_modules/
+.next/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+playwright-report/
+test-results/
+next-env.d.ts
+*.tsbuildinfo
+
+# Local secrets (commit only the .env.example files)
+.env
+.env.local
+.env.*.local
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# ---------------------------------------------------------------------------
+# Showcase: For Developers page, Admin Login, admin demo, teacher sign-in and
+# teacher demo. Kept off GitHub until reviewed. The site and API detect these
+# folders automatically, so the public site builds and runs without them.
+# To publish them later, delete this block and push.
+apps/web/app/(showcase)/
+apps/api/app/showcase/
+docs/showcase/
+# Builder for the in-Claude preview of the full site (needs the showcase folder)
+apps/web/artifact/
+# ---------------------------------------------------------------------------

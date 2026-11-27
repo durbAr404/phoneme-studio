@@ -1,0 +1,40 @@
+# One command local stack: docker compose up --build
+# Then open http://localhost:3000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: phonemestudio
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      retries: 20
+
+  api:
+    build: ./apps/api
+    environment:
+      ENV: development
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@db:5432/phonemestudio
+      DEV_LOGIN_ENABLED: "true"
+      ADMIN_EMAILS: admin@example.com
+      ALLOWED_ORIGINS: http://localhost:3000
+      CRON_SECRET: local-cron-secret
+    depends_on:
+      db: { condition: service_healthy }
+    ports: ["8000:8000"]
+
+  web:
+    build:
+      context: ./apps/web
+      args: { API_URL: http://api:8000 }
+    environment:
+      API_URL: http://api:8000
+      API_INTERNAL_URL: http://api:8000
+    depends_on: [api]
+    ports: ["3000:3000"]
+
+volumes:
+  pgdata:
