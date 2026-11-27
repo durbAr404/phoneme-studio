@@ -15,7 +15,7 @@ export type Prefs = {
 };
 
 export const DEFAULT_PREFS: Prefs = {
-  theme: "system",
+  theme: "light",
   text: "normal",
   font: "default",
   motion: "on",
@@ -44,4 +44,4 @@ export function applyPrefs(p: Prefs) {
   el.dataset.colorblind = p.colorblind ? "on" : "off";
 }
 
-export const PREFS_SCRIPT = `try{var p=JSON.parse(localStorage.getItem("phonemestudio:prefs:v1")||"{}");var t=p.theme||"system";var d=t==="dark"||(t==="system"&&matchMedia("(prefers-color-scheme: dark)").matches);var e=document.documentElement;if(d)e.classList.add("dark");e.dataset.text=p.text||"normal";e.dataset.font=p.font||"default";e.dataset.motion=p.motion||"on";e.dataset.colorblind=p.colorblind?"on":"off"}catch(x){}`;
+export const PREFS_SCRIPT = `try{var p=JSON.parse(localStorage.getItem("phonemestudio:prefs:v1")||"{}");var t=p.theme||"light";var d=t==="dark"||(t==="system"&&matchMedia("(prefers-color-scheme: dark)").matches);var e=document.documentElement;if(d)e.classList.add("dark");e.dataset.text=p.text||"normal";e.dataset.font=p.font||"default";e.dataset.motion=p.motion||"on";e.dataset.colorblind=p.colorblind?"on":"off"}catch(x){}`;
