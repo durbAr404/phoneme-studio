@@ -79,7 +79,7 @@ def _word_map(db: Session) -> dict[str, Word]:
 
 
 def seed_words(db: Session) -> None:
-    lists_data = json.loads(DATA.read_text())
+    lists_data = json.loads(DATA.read_text(encoding="utf-8"))
     existing = _word_map(db)
     for order, item in enumerate(lists_data):
         slug = SLUGS.get(item["name"], item["name"].lower().replace(" ", "-"))
