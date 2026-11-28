@@ -2,7 +2,7 @@
 
 Sound games for Australian English. Teachers and speech pathology educators build phoneme **Wordle** and **word search** games in about a minute, and students play them on any device without an account. Words are written in HCE (Harrington, Cox and Evans) symbols, so students practise hearing the sounds inside words rather than reading the letters.
 
-**Live site:** `https://YOUR-SITE.vercel.app`
+**Live site:** `https://phoneme-studio.vercel.app`
 
 ![Home page](docs/screenshots/home.png)
 
